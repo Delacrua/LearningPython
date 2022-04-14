@@ -24,6 +24,11 @@ def merge(left, right):
     return result
 
 def merge_sort(list):
+    """
+    The function sorts an unsorted array using a recursive algorithm (O(nlogn)) and returns a sorted array
+    :param list: an unsorted array
+    :return: a sorted array
+    """
     if len(list) < 2:
         return list[:]
     else:
