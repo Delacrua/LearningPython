@@ -1,7 +1,7 @@
 def hanoi(n, i, k):
     '''
     The function visualizes the way to solve Hanoi Tower puzzle for 3 rods and n disks using recursion algorithm
-    :param n: number of disks on the first rod
+    :param n: number of disks on the starting rod
     :param i: the number of the stift where the original tower stands
     :param k: the number of the disk, where tower must be moved
     :return: None
