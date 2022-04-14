@@ -1,4 +1,11 @@
 def merge(left, right):
+    """
+    The function merges sorted two sorted arrays into a new sorted array, that contains items of both arrays combined
+    in sorted order
+    :param left: first sorted array
+    :param right: second sorted array
+    :return: a sorted array
+    """
     result = []
     i, j = 0, 0
     while i < len(left) and j < len(right):
