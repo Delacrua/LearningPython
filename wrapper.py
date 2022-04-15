@@ -7,9 +7,9 @@ def wrapper(func, *args, **kwargs):
     :param kwargs: the input kwargs
     :return: modified function
     """
-    start = time.time()
+    start = time.perf_counter()
     result = func(*args, **kwargs)
-    time_spent = time.time() - start
+    time_spent = time.perf_counter() - start
     return result, time_spent
 
 
