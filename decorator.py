@@ -2,7 +2,6 @@ import time
 
 
 def decorator(func):
-    start = time.perf_counter()
 
     def wrapper(*args, **kwargs):
         """
@@ -14,6 +13,8 @@ def decorator(func):
         result = func(*args, **kwargs)
         return result
 
+    start = time.perf_counter()
+    wrapper = wrapper()
     print(f'Время работы алгоритма: {time.perf_counter() - start} секунд')
     return wrapper
 
