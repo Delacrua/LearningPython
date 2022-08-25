@@ -1,4 +1,4 @@
-def hanoi(n, i, k):
+def solve_hanoi(n, i, k):
     """
     The function prints order of operations to solve Hanoi Tower puzzle for 3 Rods and n Disks using recurrent algorithm
     :param n: number of Disks on the starting Rod
@@ -10,9 +10,9 @@ def hanoi(n, i, k):
         print(f"Move Disk 1 from Rod {i} to Rod {k}")
     else:
         tmp = 6 - i - k
-        hanoi(n - 1, i, tmp)
+        solve_hanoi(n - 1, i, tmp)
         print(f"Move Disk {n} from Rod {i} to Rod {k}")
-        hanoi(n - 1, tmp, k)
+        solve_hanoi(n - 1, tmp, k)
 
 
-hanoi(5, 1, 2)
+solve_hanoi(4, 1, 2)
