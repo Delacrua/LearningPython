@@ -1,3 +1,8 @@
+"""
+All sorting algorithms listed in this file have algorithmic complexity of O(n^2)
+"""
+
+
 def insert_sort(unsorted_list: list):
     """ sorts the list using insert mechanism"""
     for i in range(len(unsorted_list) - 1):

@@ -1,15 +1,24 @@
-def merge(left, right):
+"""
+This sorting algorithm has time complexity of O(n*log n)
+1. Divide and conquer algorithm
+2. Requires additional memory to operate (creation of sub-lists and resulting list)
+3. Can be implemented both as stable and unstable algorithm
+Base idea is in recurrent splitting of a collection into single elements and then merging them back while sorting
+"""
+
+
+def merge_lists(left: list, right: list) -> list:
     """
-    The function merges sorted two sorted arrays into a new sorted array, that contains items of both arrays combined
+    The function merges two sorted lists into a new sorted list, that contains items of both lists combined
     in sorted order
-    :param left: first sorted array
-    :param right: second sorted array
-    :return: a sorted array
+    :param left: first sorted list
+    :param right: second sorted list
+    :return: a sorted list
     """
     result = []
-    i, j = 0, 0
+    i, j = 0, 0  # i and j are pointers to positions in lists we are merging
     while i < len(left) and j < len(right):
-        if left[i] <= right[j]:
+        if left[i] <= right[j]:  # <= for sorting to be stable, make it < to make sorting unstable
             result.append(left[i])
             i += 1
         else:
@@ -23,20 +32,22 @@ def merge(left, right):
         j += 1
     return result
 
-def merge_sort(list):
+
+def merge_sort(unsorted_list: list) -> list:
     """
-    The function takes an unsorted array as an argument and returns a sorted array using a recursive algorithm (O(nlogn))
-    :param list: an unsorted array
-    :return: a sorted array
+    The function takes an unsorted list as an argument and returns a sorted list using a recurrent algorithm
+    :param unsorted_list: an unsorted list
+    :return: a sorted list
     """
-    if len(list) < 2:
-        return list[:]
+    if len(unsorted_list) < 2:
+        return unsorted_list[:]
     else:
-        n = len(list) // 2
-        left_half = list[:n]
-        right_half = list[n:]
-        return merge(merge_sort(left_half), merge_sort(right_half))
+        middle = len(unsorted_list) // 2
+        left_half = unsorted_list[:middle]
+        right_half = unsorted_list[middle:]
+        return merge_lists(merge_sort(left_half), merge_sort(right_half))
 
-a = [1, 5, 3, 2 ,7, 8, 4, 9, 6, 14, 12]
 
-print(merge_sort(a))
+test_list = [1, 5, 3, 2, 7, 8, 4, 9, 6, 14, 12]
+
+print(merge_sort(test_list))

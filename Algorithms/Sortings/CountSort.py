@@ -1,3 +1,8 @@
+"""This sorting algorithm has time complexity of O(n+m) and is especially effective in some corner cases
+(like small range of collection elements variants) and in such cases has algorithmic complexity close to O(n)
+"""
+
+
 def count_sort(unsorted_list: list):
     """
     The function sorts a list of integers using frequency analysis
