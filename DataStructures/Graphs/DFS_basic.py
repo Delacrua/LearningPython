@@ -16,28 +16,6 @@ Depth-first searches are used in:
 Depth-first search is often used as a subroutine in network flow algorithms such as the Ford-Fulkerson algorithm or
 in matching algorithms in graph theory such as the Hopcroft–Karp algorithm.
 """
-# first set up a graph adjacency list
-graph_adj = {
-    '0': ['1', '14', '18'],
-    '1': ['2', '15', '14', '0'],
-    '2': ['1', '3', '17'],
-    '3': ['4', '7', '2'],
-    '4': ['5', '6', '3'],
-    '5': ['4'],
-    '6': ['4'],
-    '7': ['3', '8', '9'],
-    '8': ['7'],
-    '9': ['7', '10'],
-    '10': ['9', '11', '12'],
-    '11': ['10'],
-    '12': ['10', '13', '14'],
-    '13': ['12'],
-    '14': ['16', '15', '1', '0', '12'],
-    '15': ['14', '1', '2'],
-    '16': ['14'],
-    '17': ['2'],
-    '18': ['0'],
-}
 
 
 def dfs(vertex, graph, visited_vertexes=None):
@@ -57,5 +35,26 @@ def dfs(vertex, graph, visited_vertexes=None):
 
 
 if __name__ == '__main__':
+    graph_adj = {
+        '0': ['1', '14', '18'],
+        '1': ['2', '15', '14', '0'],
+        '2': ['1', '3', '17'],
+        '3': ['4', '7', '2'],
+        '4': ['5', '6', '3'],
+        '5': ['4'],
+        '6': ['4'],
+        '7': ['3', '8', '9'],
+        '8': ['7'],
+        '9': ['7', '10'],
+        '10': ['9', '11', '12'],
+        '11': ['10'],
+        '12': ['10', '13', '14'],
+        '13': ['12'],
+        '14': ['16', '15', '1', '0', '12'],
+        '15': ['14', '1', '2'],
+        '16': ['14'],
+        '17': ['2'],
+        '18': ['0'],
+    }
     print("Following is the Depth-First Search")
     dfs('0', graph_adj)
