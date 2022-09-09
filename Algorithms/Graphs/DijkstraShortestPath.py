@@ -4,6 +4,7 @@ Originally - it was used to calculate the shortest path between two nodes. Due t
 calculate the shortest path between a starting node and every other node in the graph. This way it can be used to
 produce a shortest-path tree that consists of the shortest path between two nodes, as well as all other nodes, which is
 a drawback of Dijkstra's algorithm that makes it unfit for large graphs.
+Time complexity is O(n ** 2)
 """
 from collections import deque
 
