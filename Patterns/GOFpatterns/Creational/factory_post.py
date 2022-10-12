@@ -140,7 +140,7 @@ class MasterQualityExporter(ExporterFactory):
 
 def create_exporter() -> ExporterFactory:
     """
-    Constructs and ExporterFactory based on user's input of quality
+    Factory method that constructs an ExporterFactory based on user's input of quality
     :return: ExporterFactory
     """
     # read the desired export quality
