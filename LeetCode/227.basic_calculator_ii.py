@@ -17,22 +17,26 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        number, operand, stack = 0, '+', []
+        if not s:
+            return "0"
+        stack, number, operand = [], 0, "+"
 
-        for index, item in enumerate(s):
-            if item.isnumeric():
-                number = number * 10 + int(item)
-            if item in '+-*/' or index == len(s) - 1:
-                if operand == '+':
-                    stack.append(number)
-                elif operand == '-':
+        for i in range(len(s)):
+            if s[i].isdigit():
+                number = number * 10 + ord(s[i]) - ord("0")
+            if (not s[i].isdigit() and not s[i].isspace()) or i == len(s) - 1:
+                if operand == "-":
                     stack.append(-number)
-                elif operand == '*':
-                    j = stack.pop() * number
-                    stack.append(j)
-                elif operand == '/':
-                    j = int(stack.pop() / number)
-                    stack.append(j)
-                operand = item
+                elif operand == "+":
+                    stack.append(number)
+                elif operand == "*":
+                    stack.append(stack.pop() * number)
+                else:
+                    tmp = stack.pop()
+                    if tmp // number < 0 and tmp % number != 0:
+                        stack.append(tmp // number + 1)
+                    else:
+                        stack.append(tmp // number)
+                operand = s[i]
                 number = 0
         return sum(stack)
