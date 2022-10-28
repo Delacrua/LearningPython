@@ -6,6 +6,7 @@ class PizzaTypes(Enum):
     """
     a Pizza recipy book for factory method
     """
+
     MARGARITA = 0
     MEXICO = 1
     STELLA = 2
@@ -52,7 +53,7 @@ def create_pizza(pizza_type: PizzaTypes) -> Pizza:
     return factory_dict[pizza_type]()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for pizza in PizzaTypes:
         my_pizza = create_pizza(pizza)
-        print(f'Pizza type: {pizza}, price: {my_pizza.get_price()}')
+        print(f"Pizza type: {pizza}, price: {my_pizza.get_price()}")

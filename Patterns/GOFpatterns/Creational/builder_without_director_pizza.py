@@ -1,7 +1,7 @@
 from collections import namedtuple
 from enum import Enum, auto
 
-PizzaBase = namedtuple('PizzaBase', ['DoughDepth', 'DoughType'])
+PizzaBase = namedtuple("PizzaBase", ["DoughDepth", "DoughType"])
 
 
 class PizzaDoughDepth(Enum):
@@ -39,11 +39,13 @@ class Pizza:
         self.cooking_time = builder.cooking_time  # in minutes
 
     def __str__(self):
-        info: str = f'Pizza name: {self.name} \n' \
-                    f'dough type: {self.dough.DoughDepth.name} & {self.dough.DoughType.name} \n' \
-                    f'sauce type: {self.sauce} \n' \
-                    f'topping: {[topping.name for topping in self.topping]} \n' \
-                    f'cooking time: {self.cooking_time} minutes'
+        info: str = (
+            f"Pizza name: {self.name} \n"
+            f"dough type: {self.dough.DoughDepth.name} & {self.dough.DoughType.name} \n"
+            f"sauce type: {self.sauce} \n"
+            f"topping: {[topping.name for topping in self.topping]} \n"
+            f"cooking time: {self.cooking_time} minutes"
+        )
         return info
 
 
@@ -67,17 +69,19 @@ class Builder:
         return Pizza(self)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     builder = Builder()
-    builder.set_name('Margarita')
+    builder.set_name("Margarita")
     builder.set_dough(PizzaBase(PizzaDoughDepth.THICK, PizzaDoughType.WHEAT))
     builder.set_sauce(PizzaSauceType.TOMATO)
     builder.set_topping(
         [
-            topping for topping in (PizzaTopLevelType.MOZZARELLA,
-                                    PizzaTopLevelType.MOZZARELLA,
-                                    PizzaTopLevelType.BACON
-                                    )
+            topping
+            for topping in (
+                PizzaTopLevelType.MOZZARELLA,
+                PizzaTopLevelType.MOZZARELLA,
+                PizzaTopLevelType.BACON,
+            )
         ]
     )
     builder.set_cooking_time(15)

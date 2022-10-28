@@ -15,7 +15,7 @@ class SingletonMeta(type):
 
 
 class MySingleton(metaclass=SingletonMeta):
-    def __init__(self, name: str = 'They call me mr.Singleton'):
+    def __init__(self, name: str = "They call me mr.Singleton"):
         self.name = name
 
 
@@ -33,9 +33,9 @@ def make_instance(name, printer):
     printer.print_instance_data(instance)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     thread_safe_printer = ThreadSafePrinter()
-    names = [f'Singleton' + str(i) for i in range(15)]
+    names = [f"Singleton" + str(i) for i in range(15)]
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         executor.map(make_instance, names, repeat(thread_safe_printer))

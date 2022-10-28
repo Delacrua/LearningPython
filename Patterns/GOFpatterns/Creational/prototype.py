@@ -6,7 +6,7 @@ from enum import Enum, auto
 from typing import List
 
 
-PizzaBase = namedtuple('PizzaBase', ['DoughDepth', 'DoughType'])
+PizzaBase = namedtuple("PizzaBase", ["DoughDepth", "DoughType"])
 
 
 class PizzaDoughDepth(Enum):
@@ -42,14 +42,16 @@ class Prototype(ABC):
 
 
 class Pizza(Prototype):
-    def __init__(self,
-                 name: str,
-                 dough: PizzaBase = PizzaBase(PizzaDoughDepth.THICK,
-                                              PizzaDoughType.WHEAT),
-                 sauce: PizzaSauceType = PizzaSauceType.TOMATO,
-                 topping: list[PizzaTopLevelType] = None,
-                 cooking_time: int = 15
-                 ):
+    def __init__(
+        self,
+        name: str,
+        dough: PizzaBase = PizzaBase(
+            PizzaDoughDepth.THICK, PizzaDoughType.WHEAT
+        ),
+        sauce: PizzaSauceType = PizzaSauceType.TOMATO,
+        topping: list[PizzaTopLevelType] = None,
+        cooking_time: int = 15,
+    ):
         self.name = name
         self.dough = dough
         self.sauce = sauce
@@ -57,11 +59,13 @@ class Pizza(Prototype):
         self.cooking_time = cooking_time  # in minutes
 
     def __str__(self):
-        info: str = f'Pizza name: {self.name} \n' \
-                    f'dough type: {self.dough.DoughDepth.name} & {self.dough.DoughType.name} \n' \
-                    f'sauce type: {self.sauce} \n' \
-                    f'topping: {[topping.name for topping in self.topping]} \n' \
-                    f'cooking time: {self.cooking_time} minutes'
+        info: str = (
+            f"Pizza name: {self.name} \n"
+            f"dough type: {self.dough.DoughDepth.name} & {self.dough.DoughType.name} \n"
+            f"sauce type: {self.sauce} \n"
+            f"topping: {[topping.name for topping in self.topping]} \n"
+            f"cooking time: {self.cooking_time} minutes"
+        )
         return info
 
     def clone(self):
@@ -75,22 +79,28 @@ class Pizza(Prototype):
         )
 
 
-if __name__ == '__main__':
-    pizza = Pizza('Margarita', topping=[PizzaTopLevelType.MOZZARELLA,
-                                        PizzaTopLevelType.MOZZARELLA,
-                                        PizzaTopLevelType.BACON])
+if __name__ == "__main__":
+    pizza = Pizza(
+        "Margarita",
+        topping=[
+            PizzaTopLevelType.MOZZARELLA,
+            PizzaTopLevelType.MOZZARELLA,
+            PizzaTopLevelType.BACON,
+        ],
+    )
     print(pizza)
-    print('# ' * 20)
+    print("# " * 20)
     new_pizza = pizza.clone()
-    new_pizza.name = 'New_Margarita'
+    new_pizza.name = "New_Margarita"
     print(new_pizza)
-    print('# ' * 20)
+    print("# " * 20)
     salami_pizza = copy.deepcopy(new_pizza)
-    salami_pizza.name = 'Salami'
-    salami_pizza.dough = PizzaBase(PizzaDoughDepth.THIN,
-                                   PizzaDoughType.RYE)
+    salami_pizza.name = "Salami"
+    salami_pizza.dough = PizzaBase(PizzaDoughDepth.THIN, PizzaDoughType.RYE)
     salami_pizza.sauce = PizzaSauceType.BARBEQUE
-    salami_pizza.topping = [PizzaTopLevelType.MOZZARELLA,
-                            PizzaTopLevelType.SALAMI]
+    salami_pizza.topping = [
+        PizzaTopLevelType.MOZZARELLA,
+        PizzaTopLevelType.SALAMI,
+    ]
     salami_pizza.cooking_time = 10
     print(salami_pizza)

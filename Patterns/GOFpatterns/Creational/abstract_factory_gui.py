@@ -30,56 +30,57 @@ class MainWindow(ABC):
 
 class WindowsStatusBar(StatusBar):
     def __init__(self):
-        super().__init__('Windows')
+        super().__init__("Windows")
 
     def create(self):
-        print(f'Created status bar for {self._system}')
+        print(f"Created status bar for {self._system}")
 
 
 class WindowsMainMenu(MainMenu):
     def __init__(self):
-        super().__init__('Windows')
+        super().__init__("Windows")
 
     def create(self):
-        print(f'Created main menu for {self._system}')
+        print(f"Created main menu for {self._system}")
 
 
 class WindowsMainWindow(MainWindow):
     def __init__(self):
-        super().__init__('Windows')
+        super().__init__("Windows")
 
     def create(self):
-        print(f'Created main window for {self._system}')
+        print(f"Created main window for {self._system}")
 
 
 class LinuxStatusBar(StatusBar):
     def __init__(self):
-        super().__init__('Linux')
+        super().__init__("Linux")
 
     def create(self):
-        print(f'Created status bar for {self._system}')
+        print(f"Created status bar for {self._system}")
 
 
 class LinuxMainMenu(MainMenu):
     def __init__(self):
-        super().__init__('Linux')
+        super().__init__("Linux")
 
     def create(self):
-        print(f'Created main menu for {self._system}')
+        print(f"Created main menu for {self._system}")
 
 
 class LinuxMainWindow(MainWindow):
     def __init__(self):
-        super().__init__('Linux')
+        super().__init__("Linux")
 
     def create(self):
-        print(f'Created main window for {self._system}')
+        print(f"Created main window for {self._system}")
 
 
 class GuiAbstractFactory(ABC):
     """
     Abstract factory base class
     """
+
     @abstractmethod
     def get_status_bar(self) -> StatusBar:
         """abstract method for calling the creation of a status bar"""
@@ -94,7 +95,6 @@ class GuiAbstractFactory(ABC):
 
 
 class WindowsGuiFactory(GuiAbstractFactory):
-
     def get_status_bar(self) -> StatusBar:
         """method for calling the creation of a Windows status bar"""
         return WindowsStatusBar()
@@ -109,7 +109,6 @@ class WindowsGuiFactory(GuiAbstractFactory):
 
 
 class LinuxGuiFactory(GuiAbstractFactory):
-
     def get_status_bar(self) -> StatusBar:
         """method for calling the creation of a Linux status bar"""
         return LinuxStatusBar()
@@ -138,15 +137,15 @@ class Application:
 
 def create_factory(system: str) -> GuiAbstractFactory:
     factory_dict = {
-        'Windows': WindowsGuiFactory,
-        'Linux': LinuxGuiFactory,
+        "Windows": WindowsGuiFactory,
+        "Linux": LinuxGuiFactory,
     }
     return factory_dict[system]()
 
 
-if __name__ == '__main__':
-    for system_type in ('Windows', 'Linux'):
-        print(f'---->Loading app for {system_type}<----')
+if __name__ == "__main__":
+    for system_type in ("Windows", "Linux"):
+        print(f"---->Loading app for {system_type}<----")
         ui = create_factory(system=system_type)
         app = Application(ui)
         app.create_gui()
