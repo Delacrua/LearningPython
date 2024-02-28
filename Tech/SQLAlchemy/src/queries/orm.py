@@ -88,6 +88,36 @@ class SyncORM:
             print(f"{data[0].avg_compensation}")
 
 
+    @staticmethod
+    def select_resumes_avg_compensation(language: str, ):
+        """
+        SELECT workload, AVG(compensation)::int AS avg_compensation
+        FROM resumes
+        WHERE title LIKE '%Python%' AND compensation > 40000
+        GROUP BY workload
+        HAVING AVG(compensation)::int > 40000;
+        """
+        with session_factory() as session:
+            query = (
+                select(
+                    ResumesOrm.workload,
+                    cast(func.avg(ResumesOrm.compensation), Integer).label("avg_compensation"),
+                )
+                .select_from(ResumesOrm)
+                .where(and_(
+                    ResumesOrm.title.contains(language),
+                    ResumesOrm.compensation > 40_000,
+                ))
+                .group_by(ResumesOrm.workload)
+                .having(cast(func.avg(ResumesOrm.compensation), Integer) > 70000)
+            )
+            print(query.compile(compile_kwargs={"literal_binds": True}))
+            result = session.execute(query)
+            data = result.all()
+            print(f"{data=}")
+            print(f"{data[0].avg_compensation}")
+
+
 async def insert_data_async():
     async with async_session_factory() as session:
         worker_mura = WorkersOrm(username="Async_Muravitskiy")
