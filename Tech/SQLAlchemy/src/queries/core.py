@@ -1,4 +1,4 @@
-from sqlalchemy import text, insert
+from sqlalchemy import text, insert, select, update
 from models import metadata_obj, workers_table
 
 from database import sync_engine, async_engine
@@ -16,27 +16,53 @@ async def get_data_async():
         print(f"res= {result.all()}")
 
 
-def create_tables():
-    sync_engine.echo = False
-    metadata_obj.drop_all(sync_engine)
-    metadata_obj.create_all(sync_engine)
-    sync_engine.echo = True
+class SyncCore:
 
+    @staticmethod
+    def create_tables():
+        sync_engine.echo = False
+        metadata_obj.drop_all(sync_engine)
+        metadata_obj.create_all(sync_engine)
+        sync_engine.echo = True
 
-def insert_data():
-    with sync_engine.connect() as conn:
-        # stmt = text(
-        #     """
-        #     INSERT INTO workers (username) VALUES
-        #     ('Muravitsky'),
-        #     ('Pilat');
-        #     """
-        # )
-        stmt = insert(workers_table).values(
-            [
-                {"username": "Muravitsky"},
-                {"username": "Pilat"},
-            ]
-        )
-        conn.execute(stmt)
-        conn.commit()
+    @staticmethod
+    def insert_data():
+        with sync_engine.connect() as conn:
+            # stmt = text(
+            #     """
+            #     INSERT INTO workers (username) VALUES
+            #     ('Muravitsky'),
+            #     ('Pilat');
+            #     """
+            # )
+            stmt = insert(workers_table).values(
+                [
+                    {"username": "Muravitsky"},
+                    {"username": "Pilat"},
+                ]
+            )
+            conn.execute(stmt)
+            conn.commit()
+
+    @staticmethod
+    def select_workers():
+        with sync_engine.connect() as conn:
+            query = select(workers_table)
+            result = conn.execute(query)
+            workers = result.all()
+            print(workers)
+
+    @staticmethod
+    def update_worker(worker_id: int, new_username: str):
+        with sync_engine.connect() as conn:
+            # stmt = text("UPDATE workers SET username=:username WHERE id=:id")
+            # stmt = stmt.bindparams(username=new_username, id=worker_id)
+            stmt = (
+                update(workers_table).values(
+                    username=new_username
+                # ).where(workers_table.c.id == worker_id)
+                ).filter_by(id=worker_id)
+            )
+
+            conn.execute(stmt)
+            conn.commit()
