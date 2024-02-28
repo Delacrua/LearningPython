@@ -20,8 +20,10 @@ if __name__ == "__main__":
 
     SyncORM.create_tables()
     SyncORM.insert_workers()
+    SyncORM.insert_resumes()
     SyncORM.update_worker(1, "Rogozenko")
     SyncORM.select_workers()
+    SyncORM.select_resumes_avg_compensation("Python")
 
     # SyncCore.create_tables()
     # SyncCore.select_workers()
