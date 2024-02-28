@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # asyncio.run(get_data_async())
 
     create_tables()
-    insert_data()
-
-    asyncio.run(insert_data_async())
+    # insert_data()
+    #
+    # asyncio.run(insert_data_async())
 
