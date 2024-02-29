@@ -1,5 +1,5 @@
 from sqlalchemy import insert, select, func, cast, Integer, and_
-from sqlalchemy.orm import aliased, joinedload, selectinload
+from sqlalchemy.orm import aliased, joinedload, selectinload, contains_eager
 from models import WorkersOrm, ResumesOrm
 
 from database import sync_engine, async_engine, session_factory, async_session_factory, Base
@@ -208,6 +208,60 @@ class SyncORM:
 
             worker_2_resumes = result[1].resumes
             print(worker_2_resumes)
+
+    @staticmethod
+    def select_workers_with_condition_relationship():
+        with session_factory() as session:
+            query = (
+                select(WorkersOrm)
+                .options(selectinload(WorkersOrm.resumes_parttime))
+            )
+
+            res = session.execute(query)
+            result = res.unique().scalars().all()
+
+            worker_1_resumes = result[0].resumes
+            print(worker_1_resumes)
+
+    @staticmethod
+    def select_workers_with_condition_relationship_contains_eager():
+        with session_factory() as session:
+            query = (
+                select(WorkersOrm)
+                .join(WorkersOrm.resumes)
+                .options(contains_eager(WorkersOrm.resumes))
+                .filter(ResumesOrm.workload == "part_time")
+            )
+
+            res = session.execute(query)
+            result = res.unique().scalars().all()
+
+            worker_1_resumes = result[0].resumes
+            print(worker_1_resumes)
+
+    @staticmethod
+    def select_workers_with_condition_relationship_contains_eager_with_limit():
+        with session_factory() as session:
+            sub_query = (
+                select(ResumesOrm.id.label("parttime_resumes_id"))
+                .filter(ResumesOrm.worker_id == WorkersOrm.id)
+                .order_by(WorkersOrm.id.desc())
+                .limit(2)
+                .scalar_subquery()
+                .correlate(WorkersOrm)
+            )
+
+            query = (
+                select(WorkersOrm)
+                .join(ResumesOrm, ResumesOrm.id.in_(sub_query))
+                .options(contains_eager(WorkersOrm.resumes))
+            )
+
+            res = session.execute(query)
+            result = res.unique().scalars().all()
+
+            worker_1_resumes = result[0].resumes
+            print(worker_1_resumes)
 
 
 async def insert_data_async():
