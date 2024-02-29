@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, Annotated
 
 from sqlalchemy import Table, Column, UUID, Integer, String, MetaData, ForeignKey, text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base, str_255
 import enum
 
@@ -29,6 +29,8 @@ class WorkersOrm(Base):
     id: Mapped[int_pk]
     username: Mapped[str]
 
+    resumes: Mapped[list["ResumesOrm"]] = relationship()
+
 
 class ResumesOrm(Base):
     __tablename__ = "resumes"
@@ -42,6 +44,11 @@ class ResumesOrm(Base):
     )
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
+
+    worker: Mapped["WorkersOrm"] = relationship()
+
+    repr_cols_num = 4
+    repr_cols = ("created_at", )
 
 
 

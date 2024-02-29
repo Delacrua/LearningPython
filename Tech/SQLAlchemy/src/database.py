@@ -34,4 +34,15 @@ class Base(DeclarativeBase):
         str_255: String(255)
     }
 
+    repr_cols_num = 3
+    repr_cols = tuple()
+
+    def __repr__(self):
+        """Not showing relationships in repr due to making unexpected loads"""
+        cols = [
+            f"{col}={getattr(self, col)}"
+            for index, col in enumerate(self.__table__.columns.keys())
+            if col in self.repr_cols or index < self.repr_cols_num
+        ]
+        return f"<{self.__class__.__name__} {','.join(cols)}>"
 
