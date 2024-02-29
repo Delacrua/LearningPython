@@ -1,4 +1,5 @@
-from sqlalchemy import text, insert, select, func, cast, Integer, and_
+from sqlalchemy import insert, select, func, cast, Integer, and_
+from sqlalchemy.orm import aliased
 from models import WorkersOrm, ResumesOrm
 
 from database import sync_engine, async_engine, session_factory, async_session_factory, Base
@@ -39,6 +40,27 @@ class SyncORM:
                 ) for i in range(4)
             ])
             session.flush()
+            session.commit()
+
+    @staticmethod
+    def insert_additional_resumes():
+        with session_factory() as session:
+            workers = [
+                {"username": "Artem"},
+                {"username": "Roman"},
+                {"username": "Petr"},
+            ]
+            resumes = [
+                {"title": "Python программист", "compensation": 60000, "workload": "full_time", "worker_id": 3},
+                {"title": "Machine Learning Engineer", "compensation": 70000, "workload": "part_time", "worker_id": 3},
+                {"title": "Python Data Scientist", "compensation": 80000, "workload": "part_time", "worker_id": 4},
+                {"title": "Python Analyst", "compensation": 90000, "workload": "full_time", "worker_id": 4},
+                {"title": "Python Junior Developer", "compensation": 100000, "workload": "full_time", "worker_id": 5},
+            ]
+            insert_workers = insert(WorkersOrm).values(workers)
+            insert_resumes = insert(ResumesOrm).values(resumes)
+            session.execute(insert_workers)
+            session.execute(insert_resumes)
             session.commit()
 
     @staticmethod
@@ -87,35 +109,55 @@ class SyncORM:
             print(f"{data=}")
             print(f"{data[0].avg_compensation}")
 
-
     @staticmethod
-    def select_resumes_avg_compensation(language: str, ):
+    def select_with_join_cte_subquery_window_func():
         """
-        SELECT workload, AVG(compensation)::int AS avg_compensation
-        FROM resumes
-        WHERE title LIKE '%Python%' AND compensation > 40000
-        GROUP BY workload
-        HAVING AVG(compensation)::int > 40000;
+        WITH helper2 AS (
+        SELECT *, compensation-avg_workload_compensation AS compensation_diff
+        FROM
+        (SELECT
+        w.id,
+        w.username,
+        r.compensation,
+        r.workload,
+        AVG(r.compensation) OVER (PARTITION BY workload)::int AS avg_workload_compensation
+        FROM resumes r
+        JOIN workers w ON r.worker_id = w.id) helper1
+        )
+        SELECT * FROM helper2
+        ORDER BY compensation_diff DESC
         """
         with session_factory() as session:
-            query = (
+            r = aliased(ResumesOrm)
+            w = aliased(WorkersOrm)
+            subquery = (
                 select(
-                    ResumesOrm.workload,
-                    cast(func.avg(ResumesOrm.compensation), Integer).label("avg_compensation"),
+                    r,
+                    w,
+                    func.avg(r.compensation).over(partition_by=r.workload).cast(Integer).label("avg_workload_compensation")
                 )
-                .select_from(ResumesOrm)
-                .where(and_(
-                    ResumesOrm.title.contains(language),
-                    ResumesOrm.compensation > 40_000,
-                ))
-                .group_by(ResumesOrm.workload)
-                .having(cast(func.avg(ResumesOrm.compensation), Integer) > 70000)
+                .join(r, r.worker_id == w.id).subquery("helper1")
+            )
+            cte = (
+                select(
+                    subquery.c.id,
+                    subquery.c.username,
+                    subquery.c.compensation,
+                    subquery.c.workload,
+                    subquery.c.avg_workload_compensation,
+                    (subquery.c.compensation - subquery.c.avg_workload_compensation).label("compensation_diff")
+                )
+                .cte("helper2")
+            )
+            query = (
+                select(cte)
+                .order_by(cte.c.compensation_diff.desc())
             )
             print(query.compile(compile_kwargs={"literal_binds": True}))
-            result = session.execute(query)
-            data = result.all()
-            print(f"{data=}")
-            print(f"{data[0].avg_compensation}")
+
+            res = session.execute(query)
+            result = res.all()
+            print(result)
 
 
 async def insert_data_async():
@@ -124,4 +166,3 @@ async def insert_data_async():
         worker_pilat = WorkersOrm(username="Async_Pilat")
         session.add_all([worker_mura, worker_pilat])
         await session.commit()
-
