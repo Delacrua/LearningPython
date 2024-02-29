@@ -2,6 +2,8 @@ from sqlalchemy import insert, select, func, cast, Integer, and_
 from sqlalchemy.orm import aliased, joinedload, selectinload, contains_eager
 from models import WorkersOrm, ResumesOrm
 
+import schemas as model_dtos
+
 from database import sync_engine, async_engine, session_factory, async_session_factory, Base
 
 
@@ -70,6 +72,11 @@ class SyncORM:
             result = session.execute(query)
             workers = result.scalars().all()
             print(workers)
+            workers_dto = [
+                model_dtos.WorkersDTO.model_validate(row, from_attributes=True)
+                for row in workers
+            ]
+            print(workers_dto)
 
     @staticmethod
     def update_worker(worker_id: int, new_username: str):
@@ -107,7 +114,12 @@ class SyncORM:
             result = session.execute(query)
             data = result.all()
             print(f"{data=}")
-            print(f"{data[0].avg_compensation}")
+            data_dto = [
+                model_dtos.WorkloadAvgCompensationDTO.model_validate(row, from_attributes=True)
+                for row in data
+            ]
+            print(data_dto)
+
 
     @staticmethod
     def select_with_join_cte_subquery_window_func():
@@ -201,13 +213,14 @@ class SyncORM:
             )
 
             res = session.execute(query)
-            result = res.unique().scalars().all()
+            workers = res.unique().scalars().all()
+            print(workers)
 
-            worker_1_resumes = result[0].resumes
-            print(worker_1_resumes)
-
-            worker_2_resumes = result[1].resumes
-            print(worker_2_resumes)
+            workers_dto = [
+                model_dtos.WorkersRelDTO.model_validate(row, from_attributes=True)
+                for row in workers
+            ]
+            print(workers_dto)
 
     @staticmethod
     def select_workers_with_condition_relationship():
