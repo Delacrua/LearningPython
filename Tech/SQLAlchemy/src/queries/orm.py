@@ -6,6 +6,8 @@ import schemas as model_dtos
 
 from database import sync_engine, async_engine, session_factory, async_session_factory, Base
 
+from Tech.SQLAlchemy.src.models import VacanciesOrm
+
 
 class SyncORM:
 
@@ -64,6 +66,18 @@ class SyncORM:
             session.execute(insert_workers)
             session.execute(insert_resumes)
             session.commit()
+
+    @staticmethod
+    def insert_vacancies_and_replies():
+        with session_factory() as session:
+            new_vacancy = VacanciesOrm(title="Python Engineer", compensation=100_000)
+            resume_1 = session.get(ResumesOrm, 1)
+            resume_2 = session.get(ResumesOrm, 2)
+            resume_1.vacancies_replied.append(new_vacancy)
+            resume_2.vacancies_replied.append(new_vacancy)
+            session.add(resume_1).commit()
+
+
 
     @staticmethod
     def select_workers():
@@ -275,6 +289,26 @@ class SyncORM:
 
             worker_1_resumes = result[0].resumes
             print(worker_1_resumes)
+
+    @staticmethod
+    def select_resumes_with_all_relationships():
+        with session_factory() as session:
+            query = (
+                select(ResumesOrm)
+                .options(joinedload(ResumesOrm.worker))
+                .options(selectinload(ResumesOrm.vacancies_replied).load_only(VacanciesOrm.title))
+            )
+
+            res = session.execute(query)
+            result_orm = res.unique().scalars().all()
+            print(result_orm)
+
+            result_dto = [
+                model_dtos.ResumesRelVacanciesRepliedDTO.model_validate(row, from_attributes=True)
+                for row in result_orm
+            ]
+            print(result_dto)
+            return result_dto
 
 
 async def insert_data_async():

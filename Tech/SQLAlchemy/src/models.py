@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, Annotated
+from typing import Optional, Annotated, List
 
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text, CheckConstraint, Index, \
     PrimaryKeyConstraint
@@ -58,6 +58,11 @@ class ResumesOrm(Base):
         back_populates="resumes"
     )
 
+    vacancies_replied: Mapped[List["VacanciesOrm"]] = relationship(
+        back_populates="resumes_replied",
+        secondary="resumes_replies",
+    )
+
     repr_cols_num = 4
     repr_cols = ("created_at", )
 
@@ -66,6 +71,39 @@ class ResumesOrm(Base):
         Index("title_index", "title"),
         CheckConstraint("compensation > 0", name="check_compensation_positive")
     )
+
+
+class VacanciesOrm(Base):
+    __tablename__ = "vacancies"
+
+    id: Mapped[int_pk]
+    title: Mapped[str_255]
+    compensation: Mapped[Optional[int]]
+
+    resumes_replied: Mapped[List["ResumesOrm"]] = relationship(
+        back_populates="vacancies_replied",
+        secondary="vacancies_replies",
+    )
+
+
+class VacanciesRepliesOrm(Base):
+    __tablename__ = "vacancies_replies"
+
+    resume_id: Mapped[id] = mapped_column(
+        ForeignKey("resumes.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    vacancy_id: Mapped[int] = mapped_column(
+        ForeignKey("vacancies.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+
+    cover_letter: Mapped[Optional[str]]
+
+
+
+
+
 
 
 

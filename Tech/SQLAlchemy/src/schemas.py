@@ -37,3 +37,8 @@ class WorkersRelDTO(WorkersDTO):
 class WorkloadAvgCompensationDTO(BaseModel):
     workload: Workload
     avg_compensation: int
+
+
+class ResumesRelVacanciesRepliedDTO(ResumesDTO):
+    worker: "WorkersDTO"
+    vacancies_replied: list["VacanciesDTO"]
