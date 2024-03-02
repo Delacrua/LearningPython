@@ -24,14 +24,18 @@ if __name__ == "__main__":
     SyncORM.insert_additional_resumes()
     # SyncORM.update_worker(1, "Rogozenko")
     SyncORM.select_workers()
-    SyncORM.select_resumes_avg_compensation("Python")
+    # SyncORM.select_resumes_avg_compensation("Python")
     # SyncORM.select_with_join_cte_subquery_window_func()
     # SyncORM.select_workers_with_lazy_relationship()
     # SyncORM.select_workers_with_joined_relationship()
-    SyncORM.select_workers_with_selectin_relationship()
+    # SyncORM.select_workers_with_selectin_relationship()
     # SyncORM.select_workers_with_condition_relationship()
     # SyncORM.select_workers_with_condition_relationship_contains_eager()
     # SyncORM.select_workers_with_condition_relationship_contains_eager_with_limit()
+
+    SyncORM.insert_vacancies_and_replies()
+    SyncORM.select_resumes_with_all_relationships()
+
 
     # SyncCore.create_tables()
     # SyncCore.select_workers()

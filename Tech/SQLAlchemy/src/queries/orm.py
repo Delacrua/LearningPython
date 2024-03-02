@@ -1,12 +1,10 @@
 from sqlalchemy import insert, select, func, cast, Integer, and_
 from sqlalchemy.orm import aliased, joinedload, selectinload, contains_eager
-from models import WorkersOrm, ResumesOrm
+from models import WorkersOrm, ResumesOrm, VacanciesOrm
 
 import schemas as model_dtos
 
 from database import sync_engine, async_engine, session_factory, async_session_factory, Base
-
-from Tech.SQLAlchemy.src.models import VacanciesOrm
 
 
 class SyncORM:
@@ -75,7 +73,7 @@ class SyncORM:
             resume_2 = session.get(ResumesOrm, 2)
             resume_1.vacancies_replied.append(new_vacancy)
             resume_2.vacancies_replied.append(new_vacancy)
-            session.add(resume_1).commit()
+            session.commit()
 
 
 
@@ -304,10 +302,10 @@ class SyncORM:
             print(result_orm)
 
             result_dto = [
-                model_dtos.ResumesRelVacanciesRepliedDTO.model_validate(row, from_attributes=True)
-                for row in result_orm
-            ]
-            print(result_dto)
+                model_dtos.ResumesRelVacanciesRepliedWithoutVacancyCompensationDTO.model_validate(
+                    row, from_attributes=True
+                ) for row in result_orm]
+            print(f"{result_dto=}")
             return result_dto
 
 

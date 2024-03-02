@@ -60,7 +60,7 @@ class ResumesOrm(Base):
 
     vacancies_replied: Mapped[List["VacanciesOrm"]] = relationship(
         back_populates="resumes_replied",
-        secondary="resumes_replies",
+        secondary="vacancies_replies",
     )
 
     repr_cols_num = 4

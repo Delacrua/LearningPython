@@ -39,6 +39,25 @@ class WorkloadAvgCompensationDTO(BaseModel):
     avg_compensation: int
 
 
+class VacanciesAddDTO(BaseModel):
+    title: str
+    compensation: Optional[int]
+
+
+class VacanciesDTO(VacanciesAddDTO):
+    id: int
+
+
+class VacanciesWithoutCompensationDTO(BaseModel):
+    id: int
+    title: str
+
+
 class ResumesRelVacanciesRepliedDTO(ResumesDTO):
     worker: "WorkersDTO"
     vacancies_replied: list["VacanciesDTO"]
+
+
+class ResumesRelVacanciesRepliedWithoutVacancyCompensationDTO(ResumesDTO):
+    worker: "WorkersDTO"
+    vacancies_replied: list["VacanciesWithoutCompensationDTO"]
