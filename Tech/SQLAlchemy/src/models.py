@@ -12,7 +12,9 @@ metadata_obj = MetaData()
 
 
 int_pk = Annotated[int, mapped_column(primary_key=True)]
-created_at = Annotated[datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"))]
+created_at = Annotated[datetime.datetime, mapped_column(
+    server_default=text("TIMEZONE('utc', now() + interval '1 min')")
+)]
 updated_at = Annotated[datetime.datetime, mapped_column(
         server_default=text("TIMEZONE('utc', now())"),
         onupdate=datetime.datetime.utcnow
@@ -46,7 +48,7 @@ class ResumesOrm(Base):
 
     id: Mapped[int_pk]
     title: Mapped[str_255]
-    compensation: Mapped[Optional[int]]
+    compensation: Mapped[int]
     workload: Mapped[Workload]
     worker_id: Mapped[int] = mapped_column(ForeignKey(
         "workers.id", ondelete="CASCADE")
