@@ -1,0 +1,1 @@
+export CUR_BRANCH=$(git name-rev --name-only HEAD) && git diff --name-only $CUR_BRANCH $(git merge-base $CUR_BRANCH master) | grep .py | xargs flake8
