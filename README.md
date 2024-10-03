@@ -1,2 +1,2 @@
 # LearningPython
-A list of functions created while learning python
+Some usefull notes while working with python
